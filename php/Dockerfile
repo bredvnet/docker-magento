@@ -11,6 +11,7 @@ RUN apt-get -qqy update \
  && docker-php-ext-install curl \
                            bcmath \
                            gd \
+                           mbstring \
                            mcrypt \
                            mysql \
                            opcache \
@@ -20,10 +21,4 @@ RUN apt-get -qqy update \
                            zip \
   # Idiopathic rm failure; loop is workaround
  && until rm -rf /var/lib/apt/lists; do sleep 1; done
-
-COPY php-fpm.conf /etc/php5/fpm/php-fpm.conf
-COPY www-pool.conf /etc/php5/fpm/pool.d/www.conf
-COPY xdebug-enabler.ini /etc/php5/fpm/conf.d/
-
-CMD ["/usr/local/sbin/php-fpm", "-y", "/etc/php5/fpm/php-fpm.conf"]
-EXPOSE 9001
+RUN usermod -u 1000 www-data

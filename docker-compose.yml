@@ -15,7 +15,7 @@ db:
 php:
     build: php
     links:
-        - db
+        - db:mysql
     volumes_from:
         - data
 web:
