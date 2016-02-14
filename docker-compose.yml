@@ -4,7 +4,7 @@
 data:
     build: data
 db:
-    image: mysql:5
+    build: mysql
     environment:
         - MYSQL_ROOT_PASSWORD=magento
         - MYSQL_USER=magento
