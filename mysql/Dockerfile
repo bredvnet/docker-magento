@@ -1,4 +1,4 @@
-FROM mysql:5
+FROM mysql:5.5
 MAINTAINER Björn Rennfanz <bjoern.rennfanz@br-edv.net>
 
 RUN usermod -u 1000 mysql
