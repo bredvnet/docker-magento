@@ -1,38 +1,28 @@
-# data is a volume-only container for keeping the mysql and magento filesystem
-# volumes in one place.
+# Magento development composer file
+# Björn Rennfanz <bjoern.rennfanz@br-edv.net>
+#
 data:
-    image: kojiromike/magento_data
+    build: data
 db:
     image: mysql:5
     environment:
-        - MYSQL_ROOT_PASSWORD=mage
-        - MYSQL_USER=mage
-        - MYSQL_PASSWORD=mage
-        - MYSQL_DATABASE=mage
+        - MYSQL_ROOT_PASSWORD=magento
+        - MYSQL_USER=magento
+        - MYSQL_PASSWORD=magento
+        - MYSQL_DATABASE=magento
     volumes_from:
         - data
 php:
-    image: kojiromike/magento_php
+    build: php
     links:
         - db
     volumes_from:
         - data
-    ports:
-        - "9000"
 web:
-    image: kojiromike/magento_nginx
+    build: nginx
     links:
-        - php
+        - php:php_fpm
     ports:
-        - "80"
+        - "80:80"
     volumes_from:
         - data
-fs:
-    image: kojiromike/magento_fs
-    volumes_from:
-        - data
-    ports:
-        - "137:137"
-        - "138:138"
-        - "139:139"
-        - "445:445"

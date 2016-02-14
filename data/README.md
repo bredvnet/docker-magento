@@ -1,6 +1,6 @@
 # Magento Data Volume Container
 
-Part of the [Docker Magento](https://github.com/kojiromike/docker-magento)
+Part of the [Docker Magento](https://github.com/bredvnet/docker-magento)
 suite of containers.
 
 The Data Volume Container is a data-only container that houses php code files

@@ -4,10 +4,7 @@
 
 1. Clone it.
 1. Type `docker-compose up -d`.
-1. [Install a Magento](tools/README.md)
-1. [Mount your file share.](#how-do-i-use-the-file-share-container)
 1. Develop
-1. Profit!!!
 
 ## How should we build this?
 
@@ -19,9 +16,9 @@ I want this approach:
     | HTTPD/FastCGI Proxy | <-> | FastCGI PHP | <-> | MySQL |
      ---------------------       -------------       -------
                                         \               /
-                  ------------       -----------------------
-                 | File Share | <-> | Data Volume Container |
-                  ------------       -----------------------
+                                     -----------------------
+                                    | Data Volume Container |
+                                     -----------------------
 
 Separating the HTTP server from the PHP process gives us a more true-to-form
 web architecture where the web application server is distinct from the
@@ -34,16 +31,12 @@ destroying the other containers or their data.
 1. A container for the HTTPD. We'll build from `nginx` and try to configure it for FastCGI.
 1. A container for MySQL. `mysql:5` should do.
 1. A container for PHP. We'll use the official Docker PHP images with additional extensions Magento requires.
-1. A container for data volumes. The simplest docker container needs a no-op executable like `true` and some files. We'll start from `scratch` and add on from there.
-1. A container for humans to touch data volumes.
-
-## How do we set it up?
 
 Docker has a nice tool for orchestrating multiple containers for dev
 environments called [Compose](http://docs.docker.com/compose/). I defined a
 docker-compose file that builds and connects the aforementioned containers
 from its Dockerfile in each of the directories named after the service:
-_nginx_, _php_, _mysql_, _data_, _fs_. So just run `docker-compose up`.
+_nginx_, _php_, _mysql_, _fs_. So just run `docker-compose up`.
 
 ## How should I access the web server?
 
