@@ -1,6 +1,6 @@
-# Docker for Magento 1 Extension Development
+# Docker for Magento 1.x Extension Development
 
-## Tl;dr How do I use this?
+## How do I use this?
 
 1. Clone it.
 1. Type `docker-compose up -d`.
@@ -36,7 +36,7 @@ Docker has a nice tool for orchestrating multiple containers for dev
 environments called [Compose](http://docs.docker.com/compose/). I defined a
 docker-compose file that builds and connects the aforementioned containers
 from its Dockerfile in each of the directories named after the service:
-_nginx_, _php_, _mysql_, _fs_. So just run `docker-compose up`.
+_nginx_, _php_, _mysql_, _data_. So just run `docker-compose up`.
 
 ## How should I access the web server?
 
@@ -50,48 +50,6 @@ How Docker actually houses live data is a little confusing, particularly if
 you're viewing it from a workstation instead of the Docker daemon host, where
 the volume actually resides. It might help to review
 [Docker's own documentation](https://docs.docker.com/userguide/dockervolumes/)
-on the subject. Anyway, the tl;dr version is _that's what the file share
-container is for_.
+on the subject.
 
-### How do I use the file share container?
 
-The file share container creates a CIFS share for the Magento directory.
-
-#### OS X
-
-```sh
-mkdir -p <mountpoint>
-mount_smbfs -N //guest@<docker host ip>/magento_data_1 <mountpoint>
-```
-
-#### Windows
-
-```
-net use <drive letter>: \\guest@<docker host ip>\magento_data_1
-```
-
-#### Linux
-
-Similar to the OS X one, probably uses `mount -t cifs`. I didn't try it.
-Alternatively, you can run docker directly on the linux machine and access
-its volumes directly.
-
-(The above commands assume the file share container name is `magento_data_1`.
-That will be true if you work in a directory named `magento`. For how to make
-this work with other directory names, see [my note on container names](https://github.com/kojiromike/docker-magento/tree/master/tools#note-container-names) over at the tools README.)
-
-## Known issues
-
-- Speed: The CIFS share is a little slow. I tried to set up an NFS share, but
-couldn't get it working. Taking pull requests for faster shares.
-- Disappearing data: Don't panic - if you try something like `docker cp` or
-`docker export` on the _data_ container it will appear unchanged. The data is
-safe (in fact, the data is still on the host machine even if you delete the
-container, as long as you don't `docker rm -v` it.) Try something like
-
-```
-docker run --volumes-from magento_data_1 debian tar x /srv/magento > export.tar
-```
-
-to get a snapshot of your data. (Although it might be easier just to use the
-share.)
